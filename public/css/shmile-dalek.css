@@ -1,0 +1,118 @@
+*, *:before, *:after {
+  -moz-box-sizing: border-box;
+       box-sizing: border-box;
+}
+
+body {
+  background: #000;
+}
+
+img {
+  height: auto;
+  max-width: 100%;
+  border: 0;
+}
+
+.hidden {
+  display: none !important;
+  visibility: hidden !important;
+}
+
+.frame, .start, .flash, .current-photo {
+  transition: all 0.5s ease;
+}
+
+.frame {
+  width: 900px;
+  height: 600px;
+  margin: 0 auto;
+  margin-top: 50px;
+  margin-left: -300px;
+  opacity: 0;
+}
+
+.piclist {
+  margin: 0;
+  padding: 0;
+  display: block;
+  height: 100%;
+  width: 100%;
+}
+
+.piclist li {
+  list-style: none;
+  display: inline-block;
+  float: left;
+  width: 50%;
+  height: 50%;
+}
+/*  */
+/* .piclist li:nth-child(1) { */
+/*   background: green; */
+/* } */
+/* .piclist li:nth-child(2) { */
+/*   background: purple; */
+/* } */
+/* .piclist li:nth-child(3) { */
+/*   background: blue; */
+/* } */
+/* .piclist li:nth-child(4) { */
+/*   background: orange; */
+/* } */
+
+.start {
+  display: inline-block;
+  background: red;
+  color: #fff;
+  border-radius: 50%;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  margin: -100px 0 0 -100px;
+  width: 200px;
+  height: 200px;
+  text-align: center;
+  padding: 90px 0;
+  text-transform: uppercase;
+  font-weight: bold;
+  opacity: 0;
+}
+
+.flash {
+  width: 100%;
+  height: 100%;
+  position: absolute;
+  top: 0;
+  left: 0;
+  background: white;
+  z-index: 200;
+}
+
+.current-photo {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 190; 
+} 
+
+/* */
+.frame.fivebyseven {
+  width: 980px;
+  height: 700px;
+  margin-top: 20px;
+}
+
+/* */
+.frame.twobyeight {
+  width: 175px;
+  height: 700px;
+  margin-top: 20px;
+}
+
+.twobyeight .piclist li {
+  height: 25%;
+  width: 100%;
+}
+
