@@ -48,22 +48,25 @@ var fsm = StateMachine.create({
     },
     onphoto_updated: function(e, f, t) {
       Dalek.Anim.blindThem(false);
-      // // We're done with the full set.
+      // We're done with the full set.
       if (Dalek.State.current_frame_idx == 3) {
         fsm.finish_set();
       } else {
-        State.current_frame_idx = (State.current_frame_idx + 1) % 4
+        Dalek.State.current_frame_idx = (Dalek.State.current_frame_idx + 1) % 4
         fsm.continue_partial_set();
       }
     },
     onenterreview_composited: function(e, f, t) {
-      // socket.emit('composite');
-      // p.showOverlay(true);
-      // setTimeout(function() { fsm.next_set() }, Config.NEXT_DELAY);
+      debugger
+      socket.emit('composite');
+      Dalek.applyFrameTemplate();
+      setTimeout(function() { fsm.next_set() }, Config.NEXT_DELAY);
     },
     onleavereview_composited: function(e, f, t) {
-      // // Clean up
+      // Clean up
       // p.animate('out');
+      Dalek.Anim.setFrame('0ms','hide');
+      setTimeout(Dalek.Anim.setFrame('0ms','hide'), 500);
       // p.modalMessage('Nice!', Config.NICE_DELAY, 200, function() {p.slideInNext()});
     },
     onchangestate: function(e, f, t) {

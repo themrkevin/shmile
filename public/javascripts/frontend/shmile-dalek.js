@@ -2,6 +2,7 @@ window.Dalek = {
   countdown: 3, // in seconds
   State: {},
   goTimeText: "OH SNAP!",
+  frameTemplate: '/images/overlay.png',
 
   init: function() {
     Dalek.centerPos = ($window.width() / 2) - ($frame.width() / 2);
@@ -28,15 +29,14 @@ window.Dalek = {
   updatePhotoSet: function(img_src, idx, callback) {
     var photo = document.createElement('img');
     photo.src = img_src;
-    photo.className = 'current-photo';
+    photo.className = 'photo-'+idx+' current-photo';
     $('body').append(photo);
-    $frame.find('.piclist').append('<li></li>');
-    $frame.find('.piclist').find('li').last().append(photo);
-    photo.className = '';
-    
+    Dalek.Anim.framePhoto($('.photo-'+idx), '1000ms');
+    callback();
   },
 
-  framePhoto: function() {
+  applyFrameTemplate: function() {
+    $frame.append('<img class="frame-template" src="'+Dalek.frameTemplate+'" />');
   },
 
   resetState: function() {
@@ -87,6 +87,17 @@ window.Dalek = {
       } else {
         $('.flash').css('opacity', '0'); 
       }
+    },
+    framePhoto: function($el, delay) {
+      $frame.find('.piclist').append('<li></li>');
+      $li = $frame.find('.piclist').find('li').last();
+      $el.css({
+        'top': $li.offset().top,
+        'left': $li.offset().left,
+        'width': $li.width(),
+        'height': $li.height(),
+        'transition-delay': delay
+      });
     }
   }
 }
