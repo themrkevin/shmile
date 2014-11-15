@@ -3,8 +3,8 @@ html
   head
     title
       block title
-    link(rel='stylesheet', href='/css/style.css')
-    link(rel='stylesheet', href='/css/shmile.css')
+    link(rel='stylesheet', href='/components/normalize-css/normalize.css')
+    link(rel='stylesheet', href='/css/shmile-dalek.css')
 
     each css_file in extra_css
       link(rel='stylesheet', href='/css/' + css_file + '.css')
@@ -13,15 +13,14 @@ html
     meta(name='viewport', content="initial-scale=1.0, user-scalable=no")
     meta(name='apple-mobile-web-app-status-bar-style', content='black')
 
+  body
+    block content
+
     script(type='text/javascript', src='/components/jquery/dist/jquery.min.js')
     script(type='text/javascript', src='/socket.io/socket.io.js')
-    script(type='text/javascript', src='/components/raphael/raphael-min.js')
     script(type='text/javascript', src='/components/javascript-state-machine/state-machine.min.js')
     script(type='text/javascript', src='/components/underscore/underscore-min.js')
-    script(type='text/javascript', src='/components/backbone/backbone.js')
 
     each js_file in extra_js
       script(type='text/javascript', src='/javascripts/' + js_file + '.js')
 
-  body.nicegradient
-    block content

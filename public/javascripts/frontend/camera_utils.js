@@ -11,18 +11,19 @@ function CameraUtils() {};
  *   Code to execute after "Cheese" is displayed.
  *   Typically, this wraps the command to fire the shutter.
  */
-CameraUtils.snap = function(idx, cheeseCb) {
-  p.zoomFrame(idx, 'in');
+CameraUtils.snap = function(idx) {
+  // p.zoomFrame(idx, 'in');
+  Dalek.startCountdown(Dalek.countdown);
   // These guys need to be promises.
-  p.modalMessage('Ready?', Config.READY_DELAY, 200, function() {
-    p.modalMessage("3", 1000, 200, function() {
-      p.modalMessage("2", 1000, 200,  function() {
-        p.modalMessage("1", 1000, 200, function() {
-          cheeseCb();
-        });
-      });
-    });
-  });
+  // p.modalMessage('Ready?', Config.READY_DELAY, 200, function() {
+  //   p.modalMessage("3", 1000, 200, function() {
+  //     p.modalMessage("2", 1000, 200,  function() {
+  //       p.modalMessage("1", 1000, 200, function() {
+  //         cheeseCb();
+  //       });
+  //     });
+  //   });
+  // });
 }
 
 /**

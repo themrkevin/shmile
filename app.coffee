@@ -31,9 +31,9 @@ exp.get "/", (req, res) ->
     title: "shmile"
     extra_js: [
       "frontend/camera_utils",
-      "frontend/photo_view",
       "frontend/config",
-      "frontend/shmile"
+      "frontend/shmile-dalek",
+      "frontend/state-machine"
     ]
     extra_css: []
 
