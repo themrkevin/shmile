@@ -1,0 +1,11 @@
+.piclist {
+  padding: 20px
+}
+.piclist li {
+  padding-bottom: 20px 
+}
+.piclist li:nth-child(even) {
+  padding-left: 20px
+}
+
+

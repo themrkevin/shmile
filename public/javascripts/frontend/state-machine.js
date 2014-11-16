@@ -36,7 +36,14 @@ var fsm = StateMachine.create({
     onleaveready: function() {
     },
     onenterwaiting_for_photo: function(e) {
-      CameraUtils.snap(Dalek.State.current_frame_idx);
+      doTheThing = function() {
+        Dalek.announce('Snap');
+        Dalek.Anim.opacify($startButton, '0ms', '');
+        $startButton.addClass('hidden');
+        Dalek.Anim.blindThem(true);
+        socket.emit('snap', true);
+      }
+      CameraUtils.snap(Dalek.State.current_frame_idx, doTheThing);
     },
     onphoto_saved: function(e, f, t, data) {
       Dalek.Anim.blindThem(false);
@@ -52,21 +59,20 @@ var fsm = StateMachine.create({
       if (Dalek.State.current_frame_idx == 3) {
         fsm.finish_set();
       } else {
-        Dalek.State.current_frame_idx = (Dalek.State.current_frame_idx + 1) % 4
+        Dalek.State.current_frame_idx = Dalek.State.current_frame_idx + 1
         fsm.continue_partial_set();
       }
     },
     onenterreview_composited: function(e, f, t) {
-      debugger
-      socket.emit('composite');
-      Dalek.applyFrameTemplate();
+      // socket.emit('composite');
+      setTimeout(Dalek.applyFrameTemplate, 1000);
       setTimeout(function() { fsm.next_set() }, Config.NEXT_DELAY);
     },
     onleavereview_composited: function(e, f, t) {
       // Clean up
-      // p.animate('out');
       Dalek.Anim.setFrame('0ms','hide');
-      setTimeout(Dalek.Anim.setFrame('0ms','hide'), 500);
+      setTimeout(Dalek.Anim.setFrame('0ms','reset'), 500);
+      setTimeout(Dalek.prepNextSession, 1000);
       // p.modalMessage('Nice!', Config.NICE_DELAY, 200, function() {p.slideInNext()});
     },
     onchangestate: function(e, f, t) {

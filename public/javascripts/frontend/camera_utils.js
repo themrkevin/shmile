@@ -11,8 +11,8 @@ function CameraUtils() {};
  *   Code to execute after "Cheese" is displayed.
  *   Typically, this wraps the command to fire the shutter.
  */
-CameraUtils.snap = function(idx) {
-  Dalek.startCountdown(Dalek.countdown);
+CameraUtils.snap = function(idx, callback) {
+  Dalek.startCountdown(Dalek.countdown, callback);
 }
 
 /**

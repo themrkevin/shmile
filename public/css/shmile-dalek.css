@@ -45,8 +45,11 @@ img {
   list-style: none;
   display: inline-block;
   float: left;
-  width: 50%;
-  height: 50%;
+}
+
+.piclist li img {
+  width: 100%;
+  height: 100%;
 }
 
 .start {
@@ -64,6 +67,7 @@ img {
   padding: 90px 0;
   text-transform: uppercase;
   font-weight: bold;
+  z-index: 9999;
   opacity: 0;
 }
 
@@ -90,7 +94,8 @@ img {
   position: absolute;
   top: 0;
   left: 0;
-  z-index: 9999;
+  z-index: 150;
+  opacity: 0;
 }
 
 /* */

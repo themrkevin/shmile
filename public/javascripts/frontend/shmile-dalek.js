@@ -2,28 +2,48 @@ window.Dalek = {
   countdown: 3, // in seconds
   State: {},
   goTimeText: "OH SNAP!",
-  frameTemplate: '/images/overlay.png',
+  theme: "arya", // theme css filename
+  frameTemplate: '/images/arya.png',
+  Gutter: {
+    left: 20, 
+    center: 20, 
+    right: 20, 
+    top: 20, 
+    middle: 20
+  },
 
   init: function() {
     Dalek.centerPos = ($window.width() / 2) - ($frame.width() / 2);
+    Dalek.slotWidth = ($frame.find('.piclist').width()/2) - Dalek.Gutter.left - (Dalek.Gutter.center/2);
+    Dalek.slotHeight = Dalek.slotWidth / 1.5;
+    Dalek.applyTheme();
   },
 
-  startCountdown: function(s) {
+  applyTheme: function() {
+    var css = document.createElement('style');
+    css.innerText = '.piclist li:nth-child(odd) { margin-left: '+Dalek.Gutter.left+'px; margin-right: '+Dalek.Gutter.center/2+'px; }' +
+      '.piclist li:nth-child(even) { margin-left: '+Dalek.Gutter.center/2+'px; margin-right: '+Dalek.Gutter.right+'px; }' +
+      '.piclist li:nth-child(1), .piclist li:nth-child(2) { margin-top: '+Dalek.Gutter.top+'px; }' +
+      '.piclist li { margin-bottom: '+Dalek.Gutter.middle+'px; width: '+Dalek.slotWidth+'px; height: '+Dalek.slotHeight+'px; }'; 
+    $('link[rel=stylesheet]').last().after(css);
+  },
+
+  prepNextSession: function() {
+    $frame.find('.piclist').empty();
+    $('.frame-template').remove();
+    $startButton.removeClass('hidden');
+    Dalek.Anim.setFrame('0ms', 'show');  
+    Dalek.Anim.opacify($startButton, '500ms', 1);
+  },
+
+  startCountdown: function(s, callback) {
     i = s;
     (function theCounting() {
       Dalek.announce(i);
       i--;
-      var nextStep = i === 0 ? Dalek.doTheThing : theCounting;
+      var nextStep = i === 0 ? callback : theCounting;
       setTimeout(nextStep, 1000);
     })();
-  },
-
-  doTheThing: function() {
-    Dalek.announce('Snap');
-    Dalek.Anim.opacify($startButton, '0ms', '');
-    $startButton.addClass('hidden');
-    Dalek.Anim.blindThem(true);
-    socket.emit('snap', true);
   },
 
   updatePhotoSet: function(img_src, idx, callback) {
@@ -37,6 +57,7 @@ window.Dalek = {
 
   applyFrameTemplate: function() {
     $frame.append('<img class="frame-template" src="'+Dalek.frameTemplate+'" />');
+    Dalek.Anim.opacify($('.frame-template'), '0ms', 1);
   },
 
   resetState: function() {
@@ -44,8 +65,8 @@ window.Dalek = {
       photoset: [],
       set_id: null,
       current_frame_idx: 0,
-      zoomed: null
     };
+    console.log('State reset');
   },
 
   announce: function(text) {
@@ -68,6 +89,7 @@ window.Dalek = {
         default:
           opacity = '';
           position = '';
+      console.log(action);
       }
       $frame.css({
         'opacity': opacity, 
@@ -85,19 +107,26 @@ window.Dalek = {
       if(start) {
         $('body').append('<div class="flash"></div>');
       } else {
-        $('.flash').css('opacity', '0'); 
+        var $flash = $('.flash');
+        $flash.css('opacity', '0'); 
+        setTimeout(function() { $flash.remove(); }, 500);
       }
+      console.log('blinding');
     },
     framePhoto: function($el, delay) {
       $frame.find('.piclist').append('<li></li>');
       $li = $frame.find('.piclist').find('li').last();
       $el.css({
-        'top': $li.offset().top,
-        'left': $li.offset().left,
+        'top': $li.offset().top + parseInt($li.css('padding-top')),
+        'left': $li.offset().left + parseInt($li.css('padding-left')),
         'width': $li.width(),
         'height': $li.height(),
         'transition-delay': delay
       });
+      setTimeout(function() {
+        $li.append($el);
+        $el.removeClass('current-photo').attr('style','');
+      }, parseInt(delay) + 2000);
     }
   }
 }
@@ -110,7 +139,6 @@ $(function() {
   Dalek.init();
 
   $startButton.on('click', function() {
-    $startButton.addClass('pressed');
     $(document).trigger('ui_button_pressed');
   });
 });
