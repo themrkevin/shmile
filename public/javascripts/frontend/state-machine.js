@@ -34,19 +34,15 @@ var fsm = StateMachine.create({
       Dalek.resetState();
     },
     onleaveready: function() {
+      Dalek.Anim.opacify($startButton, '0ms', '');
+      $startButton.addClass('hidden');
+      $motd.removeClass('hidden');
     },
     onenterwaiting_for_photo: function(e) {
-      doTheThing = function() {
-        Dalek.announce('Snap');
-        Dalek.Anim.opacify($startButton, '0ms', '');
-        $startButton.addClass('hidden');
-        Dalek.Anim.blindThem(true);
-        socket.emit('snap', true);
-      }
-      CameraUtils.snap(Dalek.State.current_frame_idx, doTheThing);
+      // CameraUtils.snap(Dalek.State.current_frame_idx);
+      Dalek.startCountdown(Dalek.countdown);
     },
     onphoto_saved: function(e, f, t, data) {
-      Dalek.Anim.blindThem(false);
       Dalek.updatePhotoSet(data.web_url, Dalek.State.current_frame_idx, function() {
         setTimeout(function() {
           fsm.photo_updated();
@@ -54,25 +50,24 @@ var fsm = StateMachine.create({
       });
     },
     onphoto_updated: function(e, f, t) {
-      Dalek.Anim.blindThem(false);
       // We're done with the full set.
-      if (Dalek.State.current_frame_idx == 3) {
+      if (Dalek.State.current_frame_idx === 3) {
         fsm.finish_set();
       } else {
-        Dalek.State.current_frame_idx = Dalek.State.current_frame_idx + 1
+        Dalek.State.current_frame_idx++;
         fsm.continue_partial_set();
       }
     },
     onenterreview_composited: function(e, f, t) {
       // socket.emit('composite');
-      setTimeout(Dalek.applyFrameTemplate, 1000);
+      Dalek.applyFrameTemplate();
       setTimeout(function() { fsm.next_set() }, Config.NEXT_DELAY);
     },
     onleavereview_composited: function(e, f, t) {
       // Clean up
       Dalek.Anim.setFrame('0ms','hide');
-      setTimeout(Dalek.Anim.setFrame('0ms','reset'), 500);
-      setTimeout(Dalek.prepNextSession, 1000);
+      // setTimeout(Dalek.Anim.setFrame('500ms','reset'), 500);
+      setTimeout(Dalek.prepNextSession, 1500);
       // p.modalMessage('Nice!', Config.NICE_DELAY, 200, function() {p.slideInNext()});
     },
     onchangestate: function(e, f, t) {

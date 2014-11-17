@@ -1,7 +1,6 @@
 window.Dalek = {
   countdown: 3, // in seconds
   State: {},
-  goTimeText: "OH SNAP!",
   theme: "arya", // theme css filename
   frameTemplate: '/images/arya.png',
   Gutter: {
@@ -10,6 +9,10 @@ window.Dalek = {
     right: 20, 
     top: 20, 
     middle: 20
+  },
+  Message: {
+    ready: 'Ready?',
+    goTime: 'Smile!'
   },
 
   init: function() {
@@ -26,11 +29,13 @@ window.Dalek = {
       '.piclist li:nth-child(1), .piclist li:nth-child(2) { margin-top: '+Dalek.Gutter.top+'px; }' +
       '.piclist li { margin-bottom: '+Dalek.Gutter.middle+'px; width: '+Dalek.slotWidth+'px; height: '+Dalek.slotHeight+'px; }'; 
     $('link[rel=stylesheet]').last().after(css);
+    $frame.append('<img class="frame-template hidden" src="'+Dalek.frameTemplate+'" />');
+    Dalek.$frameTemplate = $('.frame-template');
   },
 
   prepNextSession: function() {
     $frame.find('.piclist').empty();
-    $('.frame-template').remove();
+    Dalek.$frameTemplate.addClass('hidden');
     $startButton.removeClass('hidden');
     Dalek.Anim.setFrame('0ms', 'show');  
     Dalek.Anim.opacify($startButton, '500ms', 1);
@@ -41,23 +46,41 @@ window.Dalek = {
     (function theCounting() {
       Dalek.announce(i);
       i--;
-      var nextStep = i === 0 ? callback : theCounting;
-      setTimeout(nextStep, 1000);
+      var theThing = i === 0 ? Dalek.doTheThing : theCounting;
+      setTimeout(theThing, 1000);
     })();
+  },
+
+  doTheThing: function() {
+    Dalek.announce(Dalek.Message.goTime, true, 1000);
+    setTimeout(function() {
+      Dalek.Anim.blindThem(true);
+      socket.emit('snap', true);
+    }, 1000);
   },
 
   updatePhotoSet: function(img_src, idx, callback) {
     var photo = document.createElement('img');
     photo.src = img_src;
-    photo.className = 'photo-'+idx+' current-photo';
+    photo.className = 'photo-'+idx+' current-photo hidden';
     $('body').append(photo);
-    Dalek.Anim.framePhoto($('.photo-'+idx), '1000ms');
-    callback();
+    $photo = $('.photo-'+idx);
+    $photo.css({
+      'width': $window.width(),
+      'height': $window.width() / 1.5,
+      'top': ($window.height() - ($window.width() / 1.5)) / 2
+    });
+    $photo.load(function() {
+      Dalek.Anim.blindThem(false);
+      $photo.removeClass('hidden');
+      Dalek.Anim.framePhoto($photo, '1000ms');
+      callback();
+    });
   },
 
   applyFrameTemplate: function() {
-    $frame.append('<img class="frame-template" src="'+Dalek.frameTemplate+'" />');
-    Dalek.Anim.opacify($('.frame-template'), '0ms', 1);
+    Dalek.$frameTemplate.removeClass('hidden');
+    Dalek.Anim.opacify(Dalek.$frameTemplate, '0ms', 1);
   },
 
   resetState: function() {
@@ -69,9 +92,14 @@ window.Dalek = {
     console.log('State reset');
   },
 
-  announce: function(text) {
-    $startButton.text(text);
+  announce: function(text, clear, delay) {
     console.log(text);
+    $motd.text(text); 
+    if(clear) {
+      setTimeout(function() {
+        $motd.empty();
+      }, delay);
+    }
   },
 
   Anim: {
@@ -131,10 +159,13 @@ window.Dalek = {
   }
 }
 
+/*****************************************************************************/
+
 $(function() {
   $window = $(window);
   $startButton = $('#start');
   $frame = $('#frame');
+  $motd = $('#motd');
 
   Dalek.init();
 
