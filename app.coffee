@@ -75,9 +75,9 @@ io.sockets.on "connection", (websocket) ->
 
   websocket.on "all_images", ->
 
-  websocket.on "composite", ->
+  websocket.on "composite", (w, h, g) ->
     compositer = new ImageCompositor(State.image_src_list).init()
-    compositer.emit "composite"
+    compositer.emit "composite", w, h, g
     compositer.on "composited", (output_file_path) ->
       console.log "Finished compositing image. Output image is at ", output_file_path
       State.image_src_list = []

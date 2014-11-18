@@ -61,7 +61,7 @@ var fsm = StateMachine.create({
       }
     },
     onenterreview_composited: function(e, f, t) {
-      socket.emit('composite');
+      socket.emit('composite', Dalek.slotWidth, Dalek.slotHeight, Dalek.Gutter);
       Dalek.applyFrameTemplate();
       setTimeout(function() { fsm.next_set() }, Config.NEXT_DELAY);
     },

@@ -7,7 +7,8 @@ window.Dalek = {
     center: 10.991, 
     right: 40.01, 
     top: 11.253, 
-    middle: 37.108
+    middle: 37.108,
+    bottom: 11.253
   },
   Message: {
     ready: 'Ready?',
@@ -16,7 +17,7 @@ window.Dalek = {
 
   init: function() {
     Dalek.centerPos = ($window.width() / 2) - ($frame.width() / 2);
-    Dalek.slotWidth = ($frame.find('.piclist').width()/2) - Dalek.Gutter.left - (Dalek.Gutter.center/2);
+    Dalek.slotWidth = ($frame.find('.piclist')[0].getBoundingClientRect().width/2) - Dalek.Gutter.left - (Dalek.Gutter.center/2);
     Dalek.slotHeight = Dalek.slotWidth / 1.5;
     Dalek.applyTheme();
   },
