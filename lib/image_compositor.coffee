@@ -12,7 +12,7 @@ TOTAL_WIDTH = IMAGE_WIDTH * 2 + IMAGE_PADDING * 3
 # Composites an array of four images into the final grid-based image asset.
 class ImageCompositor
   defaults:
-    overlay_src: "public/images/overlay.png"
+    overlay_src: "public/images/arya2.png"
     tmp_dir: "public/temp"
     output_dir: "public/photos/generated"
     thumb_dir: "public/photos/generated/thumbs"

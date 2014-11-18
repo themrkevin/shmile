@@ -1,14 +1,13 @@
 window.Dalek = {
   countdown: 3, // in seconds
   State: {},
-  theme: "arya", // theme css filename
-  frameTemplate: '/images/arya.png',
+  frameTemplate: '/images/arya2.png',
   Gutter: {
-    left: 20, 
-    center: 20, 
-    right: 20, 
-    top: 20, 
-    middle: 20
+    left: 40.01, 
+    center: 10.991, 
+    right: 40.01, 
+    top: 11.253, 
+    middle: 37.108
   },
   Message: {
     ready: 'Ready?',

@@ -37,11 +37,13 @@ var fsm = StateMachine.create({
       Dalek.Anim.opacify($startButton, '0ms', '');
       $startButton.addClass('hidden');
       $motd.removeClass('hidden');
+      Dalek.announce(Dalek.Message.ready, true, 1000);
     },
     onenterwaiting_for_photo: function(e) {
       // CameraUtils.snap(Dalek.State.current_frame_idx);
       Dalek.startCountdown(Dalek.countdown);
     },
+
     onphoto_saved: function(e, f, t, data) {
       Dalek.updatePhotoSet(data.web_url, Dalek.State.current_frame_idx, function() {
         setTimeout(function() {
@@ -59,7 +61,7 @@ var fsm = StateMachine.create({
       }
     },
     onenterreview_composited: function(e, f, t) {
-      // socket.emit('composite');
+      socket.emit('composite');
       Dalek.applyFrameTemplate();
       setTimeout(function() { fsm.next_set() }, Config.NEXT_DELAY);
     },
