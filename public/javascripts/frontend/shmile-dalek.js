@@ -1,35 +1,19 @@
 window.Dalek = {
-  countdown: 3, // in seconds
-  State: {},
-  frameTemplate: '/images/arya2.png',
-  Gutter: {
-    left: 40.01, 
-    center: 10.991, 
-    right: 40.01, 
-    top: 11.253, 
-    middle: 37.108,
-    bottom: 11.253
-  },
-  Message: {
-    ready: 'Ready?',
-    goTime: 'Smile!'
-  },
-
   init: function() {
     Dalek.centerPos = ($window.width() / 2) - ($frame.width() / 2);
-    Dalek.slotWidth = ($frame.find('.piclist')[0].getBoundingClientRect().width/2) - Dalek.Gutter.left - (Dalek.Gutter.center/2);
+    Dalek.slotWidth = ($frame.find('.piclist')[0].getBoundingClientRect().width/2) - Config.GUTTER.left - (Config.GUTTER.center/2);
     Dalek.slotHeight = Dalek.slotWidth / 1.5;
     Dalek.applyTheme();
   },
 
   applyTheme: function() {
     var css = document.createElement('style');
-    css.innerText = '.piclist li:nth-child(odd) { margin-left: '+Dalek.Gutter.left+'px; margin-right: '+Dalek.Gutter.center/2+'px; }' +
-      '.piclist li:nth-child(even) { margin-left: '+Dalek.Gutter.center/2+'px; margin-right: '+Dalek.Gutter.right+'px; }' +
-      '.piclist li:nth-child(1), .piclist li:nth-child(2) { margin-top: '+Dalek.Gutter.top+'px; }' +
-      '.piclist li { margin-bottom: '+Dalek.Gutter.middle+'px; width: '+Dalek.slotWidth+'px; height: '+Dalek.slotHeight+'px; }'; 
+    css.innerText = '.piclist li:nth-child(odd) { margin-left: '+Config.GUTTER.left+'px; margin-right: '+Config.GUTTER.center/2+'px; }' +
+      '.piclist li:nth-child(even) { margin-left: '+Config.GUTTER.center/2+'px; margin-right: '+Config.GUTTER.right+'px; }' +
+      '.piclist li:nth-child(1), .piclist li:nth-child(2) { margin-top: '+Config.GUTTER.top+'px; }' +
+      '.piclist li { margin-bottom: '+Config.GUTTER.middle+'px; width: '+Dalek.slotWidth+'px; height: '+Dalek.slotHeight+'px; }'; 
     $('link[rel=stylesheet]').last().after(css);
-    $frame.append('<img class="frame-template hidden" src="'+Dalek.frameTemplate+'" />');
+    $frame.append('<img class="frame-template hidden" src="/images/'+Config.PROJECT.template+'" />');
     Dalek.$frameTemplate = $('.frame-template');
   },
 
@@ -52,10 +36,10 @@ window.Dalek = {
   },
 
   doTheThing: function() {
-    Dalek.announce(Dalek.Message.goTime, true, 1000);
+    Dalek.announce(Config.MESSAGE.goTime, true, Config.CHEESE_DELAY);
+    socket.emit('snap', true);
     setTimeout(function() {
       Dalek.Anim.blindThem(true);
-      socket.emit('snap', true);
     }, 1000);
   },
 
@@ -89,11 +73,9 @@ window.Dalek = {
       set_id: null,
       current_frame_idx: 0,
     };
-    console.log('State reset');
   },
 
   announce: function(text, clear, delay) {
-    console.log(text);
     $motd.text(text); 
     if(clear) {
       setTimeout(function() {
@@ -117,7 +99,6 @@ window.Dalek = {
         default:
           opacity = '';
           position = '';
-      console.log(action);
       }
       $frame.css({
         'opacity': opacity, 
@@ -137,9 +118,8 @@ window.Dalek = {
       } else {
         var $flash = $('.flash');
         $flash.css('opacity', '0'); 
-        setTimeout(function() { $flash.remove(); }, 500);
+        setTimeout(function() { $flash.remove(); }, Config.FLASH_DURATION);
       }
-      console.log('blinding');
     },
     framePhoto: function($el, delay) {
       $frame.find('.piclist').append('<li></li>');
@@ -195,8 +175,7 @@ $(document).bind('ui_button_pressed', function() {
 
 socket.on('camera_snapped', function() {
   console.log('camera_snapped evt');
-  //fsm.camera_snapped();
-})
+});
 
 socket.on('photo_saved', function(data) {
   console.log('photo_saved evt: '+data.filename);

@@ -1,11 +1,26 @@
-var Config = {
-  PHOTO_MARGIN: 50, // Margin for the composite photo per side
-  WINDOW_WIDTH: $(window).width(),
-  WINDOW_HEIGHT: $(window).height() - 10,
-  OVERLAY_DELAY: 2000,
+window.Config = {
+  PROJECT: {
+    name: 'arya',
+    format: '4x6',
+    template: 'arya2.png'
+  },
+  GUTTER: {
+    left: 40.01, 
+    center: 10.991, 
+    right: 40.01, 
+    top: 11.253, 
+    middle: 37.108,
+    bottom: 11.253
+  },
+  MESSAGE: {
+    ready: 'Ready?',
+    goTime: 'Smile!'
+  },
+  COUNTDOWN: 3000,
   NEXT_DELAY: 10000,
-  CHEESE_DELAY: 400,
-  FLASH_DURATION: 1000,
+  CHEESE_DELAY: 1000,
+  SNAP_DELAY: 1400,
+  FLASH_DURATION: 500,
   READY_DELAY: 2000,
   NICE_DELAY: 5000,
 
@@ -16,5 +31,5 @@ var Config = {
   BETWEEN_SNAP_DELAY: 5000,
 
   // For usability enhancements on iPad, set this to "true"
-  IS_MOBILE: false
+  IS_MOBILE: true
 }

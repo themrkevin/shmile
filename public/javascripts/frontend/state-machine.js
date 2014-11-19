@@ -37,11 +37,11 @@ var fsm = StateMachine.create({
       Dalek.Anim.opacify($startButton, '0ms', '');
       $startButton.addClass('hidden');
       $motd.removeClass('hidden');
-      Dalek.announce(Dalek.Message.ready, true, 1000);
+      Dalek.announce(Config.MESSAGE.ready, true, 1000);
     },
     onenterwaiting_for_photo: function(e) {
-      // CameraUtils.snap(Dalek.State.current_frame_idx);
-      Dalek.startCountdown(Dalek.countdown);
+      // snap
+      Dalek.startCountdown(Config.COUNTDOWN/1000);
     },
 
     onphoto_saved: function(e, f, t, data) {
@@ -61,16 +61,22 @@ var fsm = StateMachine.create({
       }
     },
     onenterreview_composited: function(e, f, t) {
-      socket.emit('composite', Dalek.slotWidth, Dalek.slotHeight, Dalek.Gutter);
+      socket.emit('composite', { 
+        project: Config.PROJECT, 
+        gutter: Config.GUTTER, 
+        img_w: Dalek.slotWidth, 
+        img_h: Dalek.slotHeight 
+      });
       Dalek.applyFrameTemplate();
       setTimeout(function() { fsm.next_set() }, Config.NEXT_DELAY);
     },
     onleavereview_composited: function(e, f, t) {
       // Clean up
       Dalek.Anim.setFrame('0ms','hide');
-      // setTimeout(Dalek.Anim.setFrame('500ms','reset'), 500);
-      setTimeout(Dalek.prepNextSession, 1500);
-      // p.modalMessage('Nice!', Config.NICE_DELAY, 200, function() {p.slideInNext()});
+      setTimeout(function() { 
+        Dalek.Anim.setFrame('500ms','reset'); 
+      }, 500);
+      setTimeout(Dalek.prepNextSession, Config.READY_DELAY);
     },
     onchangestate: function(e, f, t) {
       console.log('fsm received event '+e+', changing state from ' + f + ' to ' + t)

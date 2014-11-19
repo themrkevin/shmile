@@ -30,7 +30,6 @@ exp.get "/", (req, res) ->
   res.render "index",
     title: "shmile"
     extra_js: [
-      "frontend/camera_utils",
       "frontend/config",
       "frontend/shmile-dalek",
       "frontend/state-machine"
@@ -75,9 +74,9 @@ io.sockets.on "connection", (websocket) ->
 
   websocket.on "all_images", ->
 
-  websocket.on "composite", (w, h, g) ->
-    compositer = new ImageCompositor(State.image_src_list).init()
-    compositer.emit "composite", w, h, g
+  websocket.on "composite", (data) ->
+    compositer = new ImageCompositor(State.image_src_list, data).init()
+    compositer.emit "composite", data
     compositer.on "composited", (output_file_path) ->
       console.log "Finished compositing image. Output image is at ", output_file_path
       State.image_src_list = []
